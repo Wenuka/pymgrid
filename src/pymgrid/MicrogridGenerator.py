@@ -239,7 +239,7 @@ class MicrogridGenerator:
                 if (i% 24 >= 12 and i%24 <18):
                     price_import.append(0.59)
                 elif (i% 24 < 8 or i%24 >=21):
-                    price_import.append(0.22)
+                    price_import.append(0.12)
                 else:
                     price_import.append(0.29)
 
@@ -392,20 +392,20 @@ class MicrogridGenerator:
         # return the list
         rand = np.random.rand()
         bin_genset = 0
-        bin_grid = 0
+        bin_grid = 1
 
-        if rand <0.33:
+        # if rand <0.33:
 
-            bin_genset =1
+        #     bin_genset =1
 
-        elif rand>= 0.33 and rand <0.66:
+        # elif rand>= 0.33 and rand <0.66:
 
-            bin_grid =1
+        #     bin_grid =1
 
-        else:
+        # else:
 
-            bin_genset=1
-            bin_grid=1
+        #     bin_genset=1
+        #     bin_grid=1
 
 
         architecture = {'PV':1, 'battery':1, 'genset':bin_genset, 'grid':bin_grid}
@@ -482,8 +482,8 @@ class MicrogridGenerator:
 
         if architecture['grid']==1:
 
-            rand_weak_grid = np.random.randint(low=0, high=2)
-            price_scenario = np.random.randint(low=1, high=3)
+            rand_weak_grid = 0  # np.random.randint(low=0, high=2)
+            price_scenario = 1  # np.random.randint(low=1, high=3)
             if rand_weak_grid == 1:
                 architecture['genset'] = 1
             grid = self._get_grid(rated_power=size['grid'], weak_grid=rand_weak_grid, price_scenario=price_scenario)
