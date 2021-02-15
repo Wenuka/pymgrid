@@ -206,7 +206,8 @@ class MicrogridGenerator:
             'soc_max':soc_max,
             'soc_min':soc_min,
             'efficiency':efficiency,
-            'soc_0':min(max(np.random.randn(), soc_min),soc_max),
+            # 'soc_0':min(max(np.random.randn(), soc_min),soc_max),
+            'soc_0':min(max(0.2, soc_min),soc_max),
             'cost_cycle':0.02
 
         }
@@ -239,7 +240,7 @@ class MicrogridGenerator:
                 if (i% 24 >= 12 and i%24 <18):
                     price_import.append(0.59)
                 elif (i% 24 < 8 or i%24 >=21):
-                    price_import.append(0.12)
+                    price_import.append(0.22)
                 else:
                     price_import.append(0.29)
 
@@ -325,7 +326,8 @@ class MicrogridGenerator:
 
         #PV penetration definition by NREL: https: // www.nrel.gov/docs/fy12osti/55094.pdf
         # penetragion = peak pv / peak load
-        pv=load.max().values[0]*(np.random.randint(low=30, high=151)/100)
+        # pv=load.max().values[0]*(np.random.randint(low=30, high=151)/100)
+        pv=load.max().values[0]*(80/100)
 
         #battery_size = self._size_battery(load)
         # return a dataframe with the power of each generator, and if applicable the number of generator
@@ -353,7 +355,8 @@ class MicrogridGenerator:
     def _size_battery(self, load):
         """ Function that returns the capacity of the battery, equivalent to 3 to 5 hours of mean load. """
         #energy duration
-        battery = int(np.ceil(np.random.randint(low=3,high=6)*np.mean(load.values)))
+        # battery = int(np.ceil(np.random.randint(low=3,high=6)*np.mean(load.values)))
+        battery = int(np.ceil(5*np.mean(load.values)))
         #todo duration & power
         return battery
 
@@ -409,7 +412,7 @@ class MicrogridGenerator:
 
 
         architecture = {'PV':1, 'battery':1, 'genset':bin_genset, 'grid':bin_grid}
-        size_load = np.random.randint(low=100,high=100001)
+        size_load = 10000  # np.random.randint(low=100,high=100001)
         load = self._scale_ts(self._get_load_ts(), size_load, scaling_method='max') #obtain dataframe of loads
         size = self._size_mg(load, size_load) #obtain a dictionary of mg sizing components
         column_actions=[]
