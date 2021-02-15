@@ -4,6 +4,10 @@ pymgrid (PYthon MicroGRID) is a python library to generate and simulate a large 
 
 For more context, please see the [presentation](https://www.climatechange.ai/papers/neurips2020/3) done at Climate Change AI.
 
+## Change log
+
+In this fork, the randomness is removed for the consistency. With this the microgrid will always have a fully available grid and no genset with a battery of fixed specifications. The grid price is also now fixed.
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pymgrid. You can clone and cd in the repo and then do: 
@@ -14,13 +18,15 @@ pip install .
 
 You can also run this pip command:
 ```bash
-pip install git+https://github.com/Total-RD/pymgrid/
+pip install git+https://github.com/Total-RD/pymgrid/  # for the original version with randomness
+pip install git+https://github.com/Wenuka/pymgrid/  # for the consistent microgrids
 ```
 
 
 And in Google Colab:
 ```bash
-!pip install git+https://github.com/Total-RD/pymgrid/
+!pip install git+https://github.com/Total-RD/pymgrid/  # for the original version with randomness
+!pip install git+https://github.com/Wenuka/pymgrid/  # for the consistent microgrids
 ```
 
 ## Getting Started
