@@ -412,7 +412,7 @@ class MicrogridGenerator:
 
 
         architecture = {'PV':1, 'battery':1, 'genset':bin_genset, 'grid':bin_grid}
-        size_load = 96  # np.random.randint(low=100,high=100001)
+        size_load = 6  # np.random.randint(low=100,high=100001)
         load = self._scale_ts(self._get_load_ts(), size_load, scaling_method='max') #obtain dataframe of loads
         size = self._size_mg(load, size_load) #obtain a dictionary of mg sizing components
         column_actions=[]
