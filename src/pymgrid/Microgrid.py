@@ -354,6 +354,8 @@ class Microgrid:
         self.parameters = parameters['parameters']
         self.architecture =  parameters['architecture']
 
+        self.isMainGrid = parameters['isMainGrid']
+
         #different timeseries
         self._load_ts=parameters['load']
         self._pv_ts=parameters['pv']

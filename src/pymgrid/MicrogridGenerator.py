@@ -83,7 +83,8 @@ class MicrogridGenerator:
     def __init__(self, nb_microgrid=10,
                  random_seed=42,
                  timestep=1,
-                 path=os.path.split(os.path.dirname(sys.modules['pymgrid'].__file__))[0]+'/pymgrid'):
+                 path=os.path.split(os.path.dirname(sys.modules['pymgrid'].__file__))[0]+'/pymgrid',
+                 isMainGrid=False, pv_multiply_factor=1):
         
         np.random.seed(random_seed)
         #todo manage simulation duration and different timesteps
@@ -93,6 +94,8 @@ class MicrogridGenerator:
         self.nb_microgrids=nb_microgrid
         self.timestep=1
         self.path=path
+        self.isMainGrid = isMainGrid
+        self.pv_multiply_factor = pv_multiply_factor
 
 
     ###########################################
@@ -391,25 +394,32 @@ class MicrogridGenerator:
         # create microgrid object and append
         # return the list
         rand = np.random.rand()
-        bin_genset = 0
-        bin_grid = 0
-
-        if rand <0.33:
-
-            bin_genset =1
-
-        elif rand>= 0.33 and rand <0.66:
-
-            bin_grid =1
-
+        if self.isMainGrid:
+            architecture = {'PV': 1, 'battery': 0, 'genset': 1, 'grid': 0}
+            size_load = 20000 * self.pv_multiply_factor  # np.random.randint(low=100,high=100001)
         else:
+            bin_genset = 0
+            bin_battery = 0
+            bin_grid = 1
 
-            bin_genset=1
-            bin_grid=1
+            if np.random.rand() <0.5:
+                bin_genset = 1
+
+            if np.random.rand() <0.5:
+                bin_battery = 1
+
+            # elif rand>= 0.33 and rand <0.66:
+            #
+            #     bin_grid =1
+            #
+            # else:
+            #
+            #     bin_genset=1
+            #     bin_grid=1
 
 
-        architecture = {'PV':1, 'battery':1, 'genset':bin_genset, 'grid':bin_grid}
-        size_load = np.random.randint(low=100,high=100001)
+            architecture = {'PV':1, 'battery':bin_battery, 'genset':bin_genset, 'grid':bin_grid}
+            size_load = np.random.randint(low=100,high=100001)
         load = self._scale_ts(self._get_load_ts(), size_load, scaling_method='max') #obtain dataframe of loads
         size = self._size_mg(load, size_load) #obtain a dictionary of mg sizing components
         column_actions=[]
@@ -482,7 +492,7 @@ class MicrogridGenerator:
 
         if architecture['grid']==1:
 
-            rand_weak_grid = np.random.randint(low=0, high=2)
+            rand_weak_grid = 0 # np.random.randint(low=0, high=2) ## no weak grids
             price_scenario = np.random.randint(low=1, high=3)
             if rand_weak_grid == 1:
                 architecture['genset'] = 1
@@ -542,6 +552,7 @@ class MicrogridGenerator:
             'grid_price_import' : grid_price_import_ts,
             'grid_price_export' : grid_price_export_ts,
             'grid_co2': grid_co2_ts,
+            'isMainGrid': self.isMainGrid
         }
 
         microgrid = Microgrid.Microgrid(microgrid_spec)
